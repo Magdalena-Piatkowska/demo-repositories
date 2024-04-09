@@ -7,13 +7,6 @@ class DBConnection(ABC):
     def transaction(self):
         raise NotImplementedError
 
-    @contextlib.contextmanager
-    def nested_transaction(self):
-        raise NotImplementedError
-
-    def destroy_db(self):
-        raise NotImplementedError
-
     def init_db(self):
         raise NotImplementedError
 
