@@ -22,4 +22,4 @@ A sample project put together to explain the Ports and Adapters pattern
 
 ### How to run the API
 
-- From root directory of the project, run: `uvicorn app.adapter.fastapi.main:app --reload`
+- From root directory of the project, run: `uvicorn app.main:app --reload`
