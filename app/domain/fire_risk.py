@@ -1,10 +1,11 @@
-from typing import List, Optional
+from typing import List, Optional, Union
 from uuid import UUID
 
 from pydantic import BaseModel, NonNegativeFloat
 
 from app.domain.insured_property import InsuredPropertyDTO
 from app.domain.occupancy_rate import OccupancyRateDTO
+from app.ports.repositories import Repositories
 
 
 class FireRiskDTO(BaseModel):
@@ -23,12 +24,14 @@ def get_property_fire_loss_cost(
     return insured_property.tiv * occupancy_rate
 
 
-def get_fire_risk(
-    insured_properties: List[InsuredPropertyDTO],
-    occupancy_rates: List[OccupancyRateDTO],
-) -> FireRiskDTO:
+def get_fire_risk(quote_id: Union[UUID, str], repos: Repositories) -> FireRiskDTO:
+    insured_properties: List[InsuredPropertyDTO] = repos.insured_property.read_multi(
+        filters={"quote_id": quote_id}
+    )
+    occupancy_rates: List[OccupancyRateDTO] = repos.occupancy_rate.read_multi()
+
     assert len(insured_properties) > 0
-    quote_id = insured_properties[0].quote_id
+    quote_id = insured_properties[0].quote_id  # type: ignore
     tiv_sum = 0.0
     loss_cost_sum = 0.0
 
@@ -38,4 +41,4 @@ def get_fire_risk(
             insured_property=property_, occupancy_rates=occupancy_rates
         )
 
-    return FireRiskDTO(quote_id=quote_id, tiv=tiv_sum, loss_cost=loss_cost_sum)
+    return FireRiskDTO(quote_id=quote_id, tiv=tiv_sum, loss_cost=loss_cost_sum)  # type: ignore

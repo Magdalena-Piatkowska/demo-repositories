@@ -5,7 +5,8 @@ from fastapi import Depends, FastAPI
 
 from app.adapter.fastapi.dependencies import get_repos, get_sql_db
 from app.domain.fire_risk import FireRiskDTO, get_fire_risk
-from app.domain.insured_property import BaseInsuredPropertyDTO, InsuredPropertyDTO
+from app.domain.insured_property import (BaseInsuredPropertyDTO,
+                                         InsuredPropertyDTO)
 from app.domain.occupancy_rate import OccupancyRateDTO
 from app.domain.quote import BaseQuoteDTO, QuoteDTO
 from app.ports.db_connection import DBConnection
@@ -63,13 +64,4 @@ def get_properties(
 def calculate(
     quote_id: Union[UUID, str], repos: Repositories = Depends(get_repos)
 ) -> FireRiskDTO:
-    assert quote_id
-    insured_properties = repos.insured_property.read_multi(
-        filters={"quote_id": quote_id}
-    )
-    occupancy_rates = repos.occupancy_rate.read_multi()
-
-    fire_risk = get_fire_risk(
-        insured_properties=insured_properties, occupancy_rates=occupancy_rates
-    )
-    return fire_risk
+    return get_fire_risk(quote_id=quote_id, repos=repos)
