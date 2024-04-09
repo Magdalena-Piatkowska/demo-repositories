@@ -15,15 +15,6 @@ from app.ports.repositories import Repositories
 app = FastAPI()
 
 
-@app.get("/api/initialise-db")
-def initialise_db(db: DBConnection = Depends(get_sql_db)):
-    try:
-        db.init_db()
-        return
-    except Exception as e:
-        return {"An error occured": str(e)}
-
-
 @app.get("/api/occupancy_rates")
 def get_occupancy_rates(
     repos: Repositories = Depends(get_repos),
