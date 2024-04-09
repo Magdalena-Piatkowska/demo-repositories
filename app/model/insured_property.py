@@ -1,10 +1,25 @@
+from typing import Optional
+from uuid import UUID
+
+from pydantic import BaseModel, NonNegativeFloat
 from sqlalchemy import Column, Float, ForeignKey, String
 from sqlalchemy.orm import relationship
 from sqlalchemy_utils import UUIDType
 
-from app.adapter.db.model.base import BaseSQLModel
-from app.adapter.db.repository import SQLRepository
-from app.domain.insured_property import InsuredPropertyDTO
+from .base import BaseSQLModel
+
+
+class BaseInsuredPropertyDTO(BaseModel):
+    quote_id: Optional[UUID] = None
+    street_name: Optional[str] = None
+    postal_code: Optional[str] = None
+    country: Optional[str] = None
+    occupancy: str
+    tiv: NonNegativeFloat = 0.0
+
+
+class InsuredPropertyDTO(BaseInsuredPropertyDTO):
+    id: Optional[UUID] = None
 
 
 class InsuredProperty(BaseSQLModel):
@@ -22,8 +37,3 @@ class InsuredProperty(BaseSQLModel):
     tiv = Column(Float, nullable=True)
 
     quote = relationship("Quote", back_populates="insured_properties")  # type: ignore
-
-
-class SQLInsuredPropertyRepository(SQLRepository):
-    model = InsuredProperty
-    model_dto = InsuredPropertyDTO

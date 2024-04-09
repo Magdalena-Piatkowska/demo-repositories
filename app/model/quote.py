@@ -1,9 +1,21 @@
+from datetime import date
+from typing import Optional
+from uuid import UUID
+
+from pydantic import BaseModel
 from sqlalchemy import Column, Date, String
 from sqlalchemy.orm import relationship
 
-from app.adapter.db.model.base import BaseSQLModel
-from app.adapter.db.repository import SQLRepository
-from app.domain.quote import QuoteDTO
+from app.model.base import BaseSQLModel
+
+
+class BaseQuoteDTO(BaseModel):
+    insured_name: Optional[str] = None
+    inception_date: Optional[date] = date.today()
+
+
+class QuoteDTO(BaseQuoteDTO):
+    id: Optional[UUID] = None
 
 
 class Quote(BaseSQLModel):
@@ -14,8 +26,3 @@ class Quote(BaseSQLModel):
     inception_date = Column(Date, nullable=True)
 
     insured_properties = relationship("InsuredProperty", back_populates="quote")  # type: ignore
-
-
-class SQLQuoteRepository(SQLRepository):
-    model = Quote
-    model_dto = QuoteDTO
