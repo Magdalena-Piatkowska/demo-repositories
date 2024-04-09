@@ -1,7 +1,6 @@
 from typing import Optional
 
-from app.adapter.file.model.insured_property import \
-    JSONInsuredPropertyRepository
+from app.adapter.file.model.insured_property import JSONInsuredPropertyRepository
 from app.adapter.file.model.occupancy_rate import JSONOccupancyRateRepository
 from app.adapter.file.model.quote import JSONQuoteRepository
 from app.ports.db_connection import DBConnection

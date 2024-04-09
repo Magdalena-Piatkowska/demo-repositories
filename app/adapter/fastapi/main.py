@@ -5,8 +5,7 @@ from fastapi import Depends, FastAPI
 
 from app.adapter.fastapi.dependencies import get_repos, get_sql_db
 from app.domain.fire_risk import FireRiskDTO, get_fire_risk
-from app.domain.insured_property import (BaseInsuredPropertyDTO,
-                                         InsuredPropertyDTO)
+from app.domain.insured_property import BaseInsuredPropertyDTO, InsuredPropertyDTO
 from app.domain.occupancy_rate import OccupancyRateDTO
 from app.domain.quote import BaseQuoteDTO, QuoteDTO
 from app.ports.db_connection import DBConnection
@@ -57,15 +56,6 @@ def get_properties(
         result = repos.insured_property.read_multi(filters={"quote_id": quote_id})
     else:
         result = repos.insured_property.read_multi()
-    return result
-
-
-@app.post("/api/property")
-def create_property(
-    obj_in: BaseInsuredPropertyDTO,
-    repos: Repositories = Depends(get_repos),
-) -> InsuredPropertyDTO:
-    result = repos.insured_property.create(obj_in=obj_in)
     return result
 
 
